@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер: Складання та оформлення Протоколу засідання</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --success: #16a34a;
+            --error: #dc2626;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        header p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .instructions-toggle {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .instructions-toggle:hover {
+            background: #bae6fd;
+        }
+
+        .instructions-content {
+            display: none;
+            background: #f0f9ff;
+            border-left: 4px solid var(--secondary);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .instructions-content.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 18px;
+            color: var(--primary);
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        #results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-box {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .result-box.success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .result-box.error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .document-preview {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 40px;
+            border-radius: 8px;
+            font-family: 'Times New Roman', Times, serif;
+            color: #000;
+            line-height: 1.5;
+            margin-top: 20px;
+        }
+
+        .doc-center { text-align: center; }
+        .doc-uppercase { text-transform: uppercase; }
+        .doc-bold { font-weight: bold; }
+        
+        .signature-line {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Інтерактивний тренажер</h1>
+        <p>Складання та оформлення Протоколу засідання (згідно з ДСТУ 4163:2020)</p>
+    </header>
+
+    <div class="card">
+        <button class="instructions-toggle" onclick="toggleInstructions()">📋 Переглянути інструкційно-технологічну карту</button>
+        
+        <div id="instructions" class="instructions-content">
+            <h3>Алгоритм виконання роботи:</h3>
+            <ol>
+                <li><strong>Заголовочна частина:</strong> Вкажіть навчальний заклад, підрозділ, вид документа (ПРОТОКОЛ), назву заходу, дату (23.10.2026), індекс (№ 4) та час.</li>
+                <li><strong>Вступна частина:</strong> Зазначте посадових осіб (Голова, Секретар), кількість присутніх (24 особи та майстри в/н Каріна Павленко і Світлана Луценко), а також Порядок денний із двох пунктів у називному відмінку з прийменником «Про».</li>
+                <li><strong>Основна частина:</strong> Оформіть блоки <code>СЛУХАЛИ</code>, <code>ВИСТУПИЛИ</code>, <code>УХВАЛИЛИ</code> для обох питань порядку денного.</li>
+                <li><strong>Підписи:</strong> Оформіть підписи згідно з ДСТУ (посада зліва, підпис посередині, власне ім'я та ПРІЗВИЩЕ великими літерами праворуч).</li>
+            </ol>
+        </div>
+
+        <form id="protocolForm" onsubmit="validateProtocol(event)">
+            
+            <!-- Блок 1: Заголовна частина -->
+            <h2>1. Заголовна частина документа</h2>
+            <div class="form-group">
+                <label>Найменування навчального закладу та структурного підрозділу:</label>
+                <input type="text" id="institution" placeholder="Наприклад: Відокремлений структурний підрозділ..." required>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Назва заходу:</label>
+                    <input type="text" id="meetingName" placeholder="Засідання..." required>
+                </div>
+                <div class="form-group">
+                    <label>Дата:</label>
+                    <input type="text" id="meetDate" placeholder="ДД.ММ.РРРР" required>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Номер (індекс) документа:</label>
+                    <input type="text" id="meetNumber" placeholder="№ ..." required>
+                </div>
+                <div class="form-group">
+                    <label>Форма та час проведення:</label>
+                    <input type="text" id="meetTime" placeholder="Очна, о 10:00" required>
+                </div>
+            </div>
+
+            <!-- Блок 2: Вступна частина -->
+            <h2>2. Вступна частина та склад учасників</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Голова:</label>
+                    <input type="text" id="chairman" placeholder="ПІБ (майстер в/н)" required>
+                </div>
+                <div class="form-group">
+                    <label>Секретар:</label>
+                    <input type="text" id="secretary" placeholder="ПІБ (студент(ка))" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Присутні (кількість та запрошені майстри в/н):</label>
+                <textarea id="attendees" placeholder="Вкажіть кількість студентів та ПІБ майстрів виробничого навчання..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Порядок денний (2 пункти, починаються з «Про» у називному відмінку):</label>
+                <textarea id="agenda" placeholder="1. Про...&#10;2. Про..." required></textarea>
+            </div>
+
+            <!-- Блок 3: Основна частина -->
+            <h2>3. Основна частина (СЛУХАЛИ — ВИСТУПИЛИ — УХВАЛИЛИ)</h2>
+            <div class="form-group">
+                <label>Питання № 1 (СЛУХАЛИ — ВИСТУПИЛИ — УХВАЛИЛИ):</label>
+                <textarea id="part1" placeholder="СЛУХАЛИ: ...&#10;ВИСТУПИЛИ: ...&#10;УХВАЛИЛИ: ..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Питання № 2 (СЛУХАЛИ — ВИСТУПИЛИ — УХВАЛИЛИ):</label>
+                <textarea id="part2" placeholder="СЛУХАЛИ: ...&#10;ВИСТУПИЛИ: ...&#10;УХВАЛИЛИ: ..." required></textarea>
+            </div>
+
+            <!-- Блок 4: Підписи -->
+            <h2>4. Реквізит «Підпис» згідно з ДСТУ 4163:2020</h2>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Голова (ПІБ з прізвищем у верхньому регістрі):</label>
+                    <input type="text" id="signChairman" placeholder="Голова — ПІБ" required>
+                </div>
+                <div class="form-group">
+                    <label>Секретар (ПІБ з прізвищем у верхньому регістрі):</label>
+                    <input type="text" id="signSecretary" placeholder="Секретар — ПІБ" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="margin-top: 20px;">Здати роботу на перевірку</button>
+        </form>
+    </div>
+
+    <!-- Блок результатів -->
+    <div id="results" class="card">
+        <h2>Результати перевірки</h2>
+        <div id="feedbackBox" class="result-box"></div>
+        
+        <h3>Перегляд сформованого документа:</h3>
+        <div id="documentPreview" class="document-preview"></div>
+        
+        <button class="btn" onclick="window.print()" style="margin-top: 20px; background-color: #059669;">Роздрукувати / Зберегти в PDF</button>
+    </div>
+
+</div>
+
+<script>
+    function toggleInstructions() {
+        const content = document.getElementById('instructions');
+        content.classList.toggle('active');
+    }
+
+    function validateProtocol(event) {
+        event.preventDefault();
+
+        // Отримання значень з форм
+        const institution = document.getElementById('institution').value.trim();
+        const meetingName = document.getElementById('meetingName').value.trim();
+        const meetDate = document.getElementById('meetDate').value.trim();
+        const meetNumber = document.getElementById('meetNumber').value.trim();
+        const meetTime = document.getElementById('meetTime').value.trim();
+        const chairman = document.getElementById('chairman').value.trim();
+        const secretary = document.getElementById('secretary').value.trim();
+        const attendees = document.getElementById('attendees').value.trim();
+        const agenda = document.getElementById('agenda').value.trim();
+        const part1 = document.getElementById('part1').value.trim();
+        const part2 = document.getElementById('part2').value.trim();
+        const signChairman = document.getElementById('signChairman').value.trim();
+        const signSecretary = document.getElementById('signSecretary').value.trim();
+
+        let errors = [];
+
+        // Перевірки за умовами карти
+        if (!meetDate.includes('23.10.2026')) {
+            errors.push("Увага: Дата засідання має відповідати 23.10.2026 згідно з технологічною картою.");
+        }
+        if (!meetNumber.includes('4')) {
+            errors.push("Увага: Номер документа має бути № 4.");
+        }
+        if (!agenda.toLowerCase().includes('про')) {
+            errors.push("Помилка в Порядку денному: пункти мають починатися з прийменника «Про».");
+        }
+        if (!part1.includes('СЛУХАЛИ') || !part1.includes('ВИСТУПИЛИ') || !part1.includes('УХВАЛИЛИ')) {
+            errors.push("У питанні № 1 обов'язково дотримуйтеся структури: СЛУХАЛИ, ВИСТУПИЛИ, УХВАЛИЛИ.");
+        }
+        if (!part2.includes('СЛУХАЛИ') || !part2.includes('ВИСТУПИЛИ') || !part2.includes('УХВАЛИЛИ')) {
+            errors.push("У питанні № 2 обов'язково дотримуйтеся структури: СЛУХАЛИ, ВИСТУПИЛИ, УХВАЛИЛИ.");
+        }
+
+        const resultsDiv = document.getElementById('results');
+        const feedbackBox = document.getElementById('feedbackBox');
+        const previewDiv = document.getElementById('documentPreview');
+
+        resultsDiv.style.display = 'block';
+        resultsDiv.scrollIntoView({ behavior: 'smooth' });
+
+        if (errors.length > 0) {
+            feedbackBox.className = 'result-box error';
+            feedbackBox.innerHTML = '<strong>Робота містить зауваження:</strong><ul>' + errors.map(e => `<li>${e}</li>`).join('') + '</ul><p>Виправте ці пункти та надішліть знову.</p>';
+            previewDiv.innerHTML = '<p style="color: red; text-align: center;">Попередній перегляд заблоковано через наявність помилок у структурі документа.</p>';
+        } else {
+            feedbackBox.className = 'result-box success';
+            feedbackBox.innerHTML = '<strong>Вітаємо!</strong> Протокол оформлено успішно з дотриманням усіх стандартів ДСТУ 4163:2020 та інструкційно-технологічної карти.';
+            
+            // Генерація вигляду готового документа
+            previewDiv.innerHTML = `
+                <div class="doc-center doc-uppercase doc-bold">${institution}</div>
+                <br>
+                <div class="doc-center doc-uppercase doc-bold" style="font-size: 18px; margin: 15px 0;">ПРОТОКОЛ</div>
+                <div class="doc-center">${meetingName}</div>
+                <br>
+                <table style="width: 100%; margin-bottom: 20px;">
+                    <tr>
+                        <td><strong>Дата:</strong> ${meetDate}</td>
+                        <td style="text-align: right;"><strong>${meetNumber}</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Місце / час проведення:</strong> ${meetTime}</td>
+                    </tr>
+                </table>
+                <hr style="border: 0; border-top: 1px solid #000; margin-bottom: 15px;">
+                <p><strong>ГОЛОВА:</strong> ${chairman}</p>
+                <p><strong>СЕКРЕТАР:</strong> ${secretary}</p>
+                <p><strong>ПРИСУТНІ:</strong> ${attendees.replace(/\n/g, '<br>')}</p>
+                <br>
+                <p class="doc-bold doc-center">ПОРЯДОК ДЕННИЙ</p>
+                <p>${agenda.replace(/\n/g, '<br>')}</p>
+                <br>
+                <p class="doc-bold">ПИТАННЯ № 1</p>
+                <p>${part1.replace(/\n/g, '<br>')}</p>
+                <br>
+                <p class="doc-bold">ПИТАННЯ № 2</p>
+                <p>${part2.replace(/\n/g, '<br>')}</p>
+                <br><br>
+                <div class="signature-line">
+                    <div>Голова _______________ ${signChairman}</div>
+                </div>
+                <br>
+                <div class="signature-line">
+                    <div>Секретар _______________ ${signSecretary}</div>
+                </div>
+            `;
+        }
+    }
+</script>
+
+</body>
+</html>
